@@ -1,0 +1,69 @@
+/* Base styles */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #4e494d;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Calculator wrapper */
+.calculator {
+    width: 100vw;
+    max-width: 400px;
+}
+
+/* Input/display box */
+#inputBox {
+    width: 100%;
+    font-size: 2em;
+    text-align: right;
+    background-color: #4e494d;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Button container as a grid */
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+}
+
+/* Base button style */
+button {
+    width: 100%;
+    height: 16.02vh;
+    font-size: 3em;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+/* Matching color scheme from the table version */
+.digitButton {
+    background-color: #807e80;
+}
+
+.operatorButton {
+    background-color: #ff9e06;
+}
+
+.ACButton {
+    background-color: #656165;
+}
+
+/* Hover/active effects */
+button:hover {
+    filter: brightness(1.1);
+}
+
+button:active {
+    transform: scale(0.98);
+}
