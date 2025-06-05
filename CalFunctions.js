@@ -74,3 +74,65 @@ function Divide(a, b) {
     }
     return a / b;
 }
+
+function getCurrentValue() {
+    return parseFloat(document.getElementById("inputBox").value);
+}
+
+function setDisplay(value) {
+    document.getElementById("inputBox").value = value;
+}
+
+function calculateSquareRoot() {
+    let value = getCurrentValue();
+    setDisplay(Math.sqrt(value));
+}
+
+function calculateSquare() {
+    let value = getCurrentValue();
+    setDisplay(value * value);
+}
+
+function calculateInverse() {
+    let value = getCurrentValue();
+    setDisplay(value !== 0 ? 1 / value : "Infinity");
+}
+
+function calculateSin() {
+    let value = getCurrentValue();
+    setDisplay(Math.sin(value * Math.PI / 180)); // degrees to radians
+}
+
+function calculateCos() {
+    let value = getCurrentValue();
+    setDisplay(Math.cos(value * Math.PI / 180));
+}
+
+function calculateTan() {
+    let value = getCurrentValue();
+    setDisplay(Math.tan(value * Math.PI / 180));
+}
+
+function calculateLog() {
+    let value = getCurrentValue();
+    setDisplay(Math.log10(value));
+}
+
+function calculateExp() {
+    let value = getCurrentValue();
+    setDisplay(Math.exp(value));
+}
+
+function calculatePower() {
+    let base = getCurrentValue();
+    let exponent = prompt("Enter exponent:");
+    if (!isNaN(exponent)) {
+        setDisplay(Math.pow(base, parseFloat(exponent)));
+    } else {
+        alert("Invalid exponent");
+    }
+}
+
+function calculatePI() {
+    setDisplay(Math.PI);
+}
