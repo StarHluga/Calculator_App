@@ -11,21 +11,19 @@
 
             <div class="sciPanel">
                 <!-- Scientific Calculator Buttons -->
-                <button class="sciButton" onclick="calculateSin()">sin</button>
-                <button class="sciButton" onclick="calculateCos()">cos</button>
-                <button class="sciButton" onclick="calculateTan()">tan</button>
-                <button class="sciButton" onclick="calculateSquareRoot()">√</button>
-   
+                <button class="sciButton" onclick="sciFunc('sin')">sin(x)</button>
+                <button class="sciButton" onclick="sciFunc('cos')">cos(x)</button>
+                <button class="sciButton" onclick="sciFunc('tan')">tan(x)</button>
+                <button class="sciButton" onclick="sciFunc('sqrt')">√(x)</button>
+
                 <button class="sciButton" onclick="calculateSquare()">x²</button>
-                <button class="sciButton" onclick="calculateSin()">sin</button>
-                <button class="sciButton" onclick="calculateCos()">cos</button>
-                <button class="sciButton" onclick="calculateTan()">tan</button>
-   
-                <button class="sciButton" onclick="calculateLog()">log</button>
-                <button class="sciButton" onclick="calculateExp()">exp</button>
+                <button class="sciButton" onclick="sciFunc('log')">log(x)</button>
+                <button class="sciButton" onclick="sciFunc('exp')">exp(x)</button>
                 <button class="sciButton" onclick="calculatePower()">xʸ</button>
+
                 <button class="sciButton" onclick="calculatePI()">π</button>
-           </div>
+                <button class="sciButton" onclick="calculateInverse()">1/x</button>
+            </div>
            
            <div class="mainPanel">
                 <input type="text" id="inputBox" disabled>
@@ -48,7 +46,7 @@
                     <button class="digitButton" onclick="digitBtnPressed(0)">0</button>
                     <button class="ACButton" onclick="btnACPressed()">AC</button>
                     <button class="operatorButton" onclick="operatorBtnPressed('/')">/</button>
-                    <button class="operatorButton" onclick="EqualsBtnPressed('=')">=</button>
+                    <button class="operatorButton" onclick="EqualsBtnPressed()">=</button>
 
                 
                 </div>

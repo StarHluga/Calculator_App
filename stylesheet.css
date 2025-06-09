@@ -21,7 +21,6 @@ body {
 
 .sciPanel {
     width: 25vw;
-    background-color: #2e3b4e;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2px;
@@ -82,7 +81,7 @@ button {
     background-color: #656165;
 }
 .sciButton {
-    background-color: #4e94ce;
+    background-color: #ff9e06;
 }
 /* Hover/active effects */
 button:hover {

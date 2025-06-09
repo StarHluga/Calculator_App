@@ -1,138 +1,134 @@
-newLine = true;
-var currentValue;
-var value1;
-var value2;
-var currentOperator;
+let expression = "";
+let newLine = true;
 
+function digitBtnPressed(digit) {
+    expression = newLine && !expression.endsWith("(") ? digit.toString() : expression + digit;
+    updateDisplay(expression);
+    newLine = false;
+}
 
-function digitBtnPressed(button){
-    if(newLine){
-        document.getElementById("inputBox").value = button;
-        newLine = false; // Clear the input box for a new calculation
-    }else {
-        currentValue = document.getElementById("inputBox").value;
-        document.getElementById("inputBox").value = currentValue + button;
+function operatorBtnPressed(op) {
+    if (!newLine) expression += op;
+    updateDisplay(expression);
+    newLine = false;
+}
+
+function sciFunc(funcName) {
+    expression += funcName + "(";
+    updateDisplay(expression);
+    newLine = false;
+}
+
+function EqualsBtnPressed() {
+    try {
+        expression = autoCloseBrackets(expression);
+        const result = evalSciExpression(expression);
+        updateDisplay(result);
+        expression = result.toString();
+    } catch (e) {
+        updateDisplay("Error");
+        expression = "";
     }
-  
+    newLine = true;
 }
 
-function btnACPressed(){
-    document.getElementById("inputBox").value = 0; // Reset the input box
-    newLine = true; // Allow a new calculation to start
+function btnACPressed() {
+    expression = "";
+    updateDisplay("0");
+    newLine = true;
 }
 
-function operatorBtnPressed(operator){
-    currentOperator = operator;
-    value1 = parseFloat(document.getElementById("inputBox").value);
-    newLine = true; // Prepare for the next number input
+function autoCloseBrackets(expr) {
+    const open = (expr.match(/\(/g) || []).length;
+    const close = (expr.match(/\)/g) || []).length;
+    return expr + ")".repeat(open - close);
 }
 
-function EqualsBtnPressed(){
-    value2 = parseFloat(document.getElementById("inputBox").value);
-    var finalTotal;;
+function insertMultiplication(expr) {
+    const functions = ["sin", "cos", "tan", "log", "exp", "sqrt", "pi"];
+    let result = "";
 
-    switch(currentOperator) {
-        case '+':
-            finalTotal = Add(value1, value2);
-            break;
-        case '-':
-            finalTotal = Subtract(value1, value2);
-            break;
-        case '*':
-            finalTotal = Multiply(value1, value2);
-            break;
-        case '/':
-            finalTotal = Divide(value1, value2);
-            break;
-        default:
-            alert("Invalid operator");
-            return;
+    for (let i = 0; i < expr.length; i++) {
+        result += expr[i];
+        for (let func of functions) {
+            if (expr.substring(i + 1, i + 1 + func.length) === func && /[\d)]/.test(expr[i])) {
+                result += "*";
+                break;
+            }
+        }
     }
-
-    document.getElementById("inputBox").value = finalTotal; // Display the result
-    newLine = true; // Allow a new calculation to start
-    currentOperator = null; // Reset the operator
-    value1 = null; // Reset the first value
+    return result;
 }
 
-function Add(a, b) {
-    return a + b;
+function toRad(degrees) {
+    return degrees * (Math.PI / 180);
 }
 
-function Subtract(a, b) {
-    return a - b;
+function evalSciExpression(expr) {
+    expr = insertMultiplication(expr)
+        .replace(/sin\(([^)]+)\)/g, "Math.sin(toRad($1))")
+        .replace(/cos\(([^)]+)\)/g, "Math.cos(toRad($1))")
+        .replace(/tan\(([^)]+)\)/g, "Math.tan(toRad($1))")
+        .replace(/log\(([^)]+)\)/g, "Math.log10($1)")
+        .replace(/exp\(([^)]+)\)/g, "Math.exp($1)")
+        .replace(/sqrt\(([^)]+)\)/g, "Math.sqrt($1)")
+        .replace(/pi/g, "Math.PI");
+
+    return eval(expr);
 }
 
-function Multiply(a, b) {
-    return a * b;
-}
-
-function Divide(a, b) {
-    if (b === 0) {
-        alert("Infinity");
-        return null;
-    }
-    return a / b;
+function updateDisplay(value) {
+    document.getElementById("inputBox").value = value;
 }
 
 function getCurrentValue() {
     return parseFloat(document.getElementById("inputBox").value);
 }
 
-function setDisplay(value) {
-    document.getElementById("inputBox").value = value;
-}
-
 function calculateSquareRoot() {
-    let value = getCurrentValue();
-    setDisplay(Math.sqrt(value));
+    expression = `sqrt(${expression})`;
+    updateDisplay(expression);
+    newLine = false;
 }
 
 function calculateSquare() {
-    let value = getCurrentValue();
-    setDisplay(value * value);
+    expression = `(${expression})**2`;
+    updateDisplay(expression);
+    newLine = false;
 }
 
 function calculateInverse() {
-    let value = getCurrentValue();
-    setDisplay(value !== 0 ? 1 / value : "Infinity");
-}
+    if (!expression.trim() || newLine) {
+        // User pressed Inverse as the first input
+        expression = "1/(";
+        updateDisplay(expression);
+        newLine = false;
+        return;
+    }
 
-function calculateSin() {
-    let value = getCurrentValue();
-    setDisplay(Math.sin(value * Math.PI / 180)); // degrees to radians
-}
+    // Otherwise, treat it as wrapping the current expression
+    const inverseExpr = `1/(${autoCloseBrackets(expression)})`;
 
-function calculateCos() {
-    let value = getCurrentValue();
-    setDisplay(Math.cos(value * Math.PI / 180));
-}
+    try {
+        const result = evalSciExpression(inverseExpr);
+        updateDisplay(!isFinite(result) ? "Infinity" : result);
+        expression = result.toString();
+    } catch (e) {
+        updateDisplay("Error");
+        expression = "";
+    }
 
-function calculateTan() {
-    let value = getCurrentValue();
-    setDisplay(Math.tan(value * Math.PI / 180));
-}
-
-function calculateLog() {
-    let value = getCurrentValue();
-    setDisplay(Math.log10(value));
-}
-
-function calculateExp() {
-    let value = getCurrentValue();
-    setDisplay(Math.exp(value));
+    newLine = true;
 }
 
 function calculatePower() {
-    let base = getCurrentValue();
-    let exponent = prompt("Enter exponent:");
-    if (!isNaN(exponent)) {
-        setDisplay(Math.pow(base, parseFloat(exponent)));
-    } else {
-        alert("Invalid exponent");
-    }
+    expression += "**";
+    updateDisplay(expression);
+    newLine = false;
 }
 
 function calculatePI() {
-    setDisplay(Math.PI);
+    expression += "pi";
+    updateDisplay(expression);
+    newLine = false;
 }
