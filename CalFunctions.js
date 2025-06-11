@@ -19,6 +19,7 @@ function sciFunc(funcName) {
     newLine = false;
 }
 
+//adds bracket(calls bracket), evaluate the expr, and updates the display
 function EqualsBtnPressed() {
     try {
         expression = autoCloseBrackets(expression);
@@ -31,19 +32,28 @@ function EqualsBtnPressed() {
     }
     newLine = true;
 }
-
-function btnACPressed() {
-    expression = "";
-    updateDisplay("0");
-    newLine = true;
-}
-
+//checks brackets and add the closing bracket 
 function autoCloseBrackets(expr) {
     const open = (expr.match(/\(/g) || []).length;
     const close = (expr.match(/\)/g) || []).length;
     return expr + ")".repeat(open - close);
 }
 
+//replace sin(30) with Math.sin(toRad()) and replaces toRad() with degrees to radian
+function evalSciExpression(expr) {
+    expr = insertMultiplication(expr)
+        .replace(/sin\(([^)]+)\)/g, "Math.sin(toRad($1))")
+        .replace(/cos\(([^)]+)\)/g, "Math.cos(toRad($1))")
+        .replace(/tan\(([^)]+)\)/g, "Math.tan(toRad($1))")
+        .replace(/log\(([^)]+)\)/g, "Math.log10($1)")
+        .replace(/exp\(([^)]+)\)/g, "Math.exp($1)")
+        .replace(/sqrt\(([^)]+)\)/g, "Math.sqrt($1)")
+        .replace(/pi/g, "Math.PI");
+
+    return eval(expr);
+}
+ 
+//checks if a digit was entered before a function and adds a multification operator if true
 function insertMultiplication(expr) {
     const functions = ["sin", "cos", "tan", "log", "exp", "sqrt", "pi"];
     let result = "";
@@ -60,22 +70,17 @@ function insertMultiplication(expr) {
     return result;
 }
 
+//converts degrees to radian
 function toRad(degrees) {
     return degrees * (Math.PI / 180);
 }
 
-function evalSciExpression(expr) {
-    expr = insertMultiplication(expr)
-        .replace(/sin\(([^)]+)\)/g, "Math.sin(toRad($1))")
-        .replace(/cos\(([^)]+)\)/g, "Math.cos(toRad($1))")
-        .replace(/tan\(([^)]+)\)/g, "Math.tan(toRad($1))")
-        .replace(/log\(([^)]+)\)/g, "Math.log10($1)")
-        .replace(/exp\(([^)]+)\)/g, "Math.exp($1)")
-        .replace(/sqrt\(([^)]+)\)/g, "Math.sqrt($1)")
-        .replace(/pi/g, "Math.PI");
-
-    return eval(expr);
+function btnACPressed() {
+    expression = "";
+    updateDisplay("0");
+    newLine = true;
 }
+
 
 function updateDisplay(value) {
     document.getElementById("inputBox").value = value;
